@@ -1111,7 +1111,7 @@ html, body { height:100%; font-family: 'Inter', system-ui, sans-serif; backgroun
 <input type="file" id="input-importar" accept=".json" style="display:none" onchange="procesarImport(this)">
 
 <script>
-const NEXUS_VERSION = 'v1.5.0';
+const NEXUS_VERSION = 'v1.5.1';
 const MODELOS_CENTRAL = {
   'Galaxy Dimension': ['Dimension 48','Dimension 96','Dimension 264','Dimension 520'],
   'Galaxy Flex': ['FX020+','FX050+','FX100+'],
@@ -1834,7 +1834,14 @@ function renderContactos() {
   `).join('');
 }
 function filtrarContactos(q) {
-  const lista = Object.values(DB.contactos).filter(c => !q || (c.nombre||'').toLowerCase().includes(q.toLowerCase()) || (c.telefono||'').includes(q));
+  const qq = (q||'').toLowerCase();
+  const lista = Object.values(DB.contactos).filter(c => !qq ||
+    (c.nombre||'').toLowerCase().includes(qq) ||
+    (c.telefono||'').toLowerCase().includes(qq) ||
+    (c.cargo||'').toLowerCase().includes(qq) ||
+    (c.notas||'').toLowerCase().includes(qq) ||
+    (c.email||'').toLowerCase().includes(qq)
+  );
   const el = document.getElementById('lista-contactos');
   if (!lista.length) { el.innerHTML = '<div class="empty-state"><p>Sin resultados.</p></div>'; return; }
   el.innerHTML = lista.map(c => `
