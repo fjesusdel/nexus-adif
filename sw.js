@@ -1,4 +1,4 @@
-const CACHE = 'nexus-v1.0.0';
+const CACHE = 'nexus-v1.5.1';
 const ARCHIVOS = [
   '/nexus-adif/',
   '/nexus-adif/index.html',
@@ -22,8 +22,24 @@ self.addEventListener('activate', e => {
   );
 });
 
+// Para el HTML principal (navegación): red primero, caché como respaldo sin conexión.
+// Así siempre se ve la última versión subida a GitHub cuando hay internet.
+// Para el resto de archivos (iconos, manifest, fuentes): caché primero, más rápido.
 self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request).catch(() => caches.match('/nexus-adif/index.html')))
-  );
+  const esNavegacion = e.request.mode === 'navigate' || e.request.url.endsWith('index.html') || e.request.url.endsWith('/nexus-adif/');
+
+  if (esNavegacion) {
+    e.respondWith(
+      fetch(e.request)
+        .then(resp => {
+          caches.open(CACHE).then(c => c.put(e.request, resp.clone()));
+          return resp;
+        })
+        .catch(() => caches.match(e.request).then(cached => cached || caches.match('/nexus-adif/index.html')))
+    );
+  } else {
+    e.respondWith(
+      caches.match(e.request).then(cached => cached || fetch(e.request))
+    );
+  }
 });
