@@ -1117,7 +1117,7 @@ html, body { height:100%; font-family: 'Inter', system-ui, sans-serif; backgroun
 <input type="file" id="input-importar" accept=".json" style="display:none" onchange="procesarImport(this)">
 
 <script>
-const NEXUS_VERSION = 'v1.7.0';
+const NEXUS_VERSION = 'v1.7.1';
 // Servidor NEXUS por defecto (Fran/admin puede cambiarlo en Ajustes → Servidor NEXUS).
 // Así Jesús y cualquier otro usuario se sincronizan sin tener que configurar nada.
 const NEXUS_SERVER_DEFAULT_URL = 'https://nexus-adif.fjesusdel.workers.dev/';
@@ -1707,6 +1707,20 @@ function cambiarTab(tab) {
 }
 
 // ── INSTALACIONES ─────────────────────────────────────
+function tagMarcaCentral(i) {
+  if (!i.centralMarca) return '';
+  const logoKey = LOGO_POR_MARCA_CENTRAL[i.centralMarca];
+  if (i.centralMarca === 'Sintony' && logoKey && LOGOS_MARCA[logoKey]) {
+    // Sintony: con el logo de Siemens es suficiente, no hace falta el modelo
+    return `<span class="card-tag card-tag-logo"><img src="${LOGOS_MARCA[logoKey]}" alt="Siemens" style="height:11px;vertical-align:middle;display:inline-block"></span>`;
+  }
+  if ((i.centralMarca === 'Galaxy Dimension' || i.centralMarca === 'Galaxy Flex') && logoKey && LOGOS_MARCA[logoKey]) {
+    // Honeywell: interesa saber el modelo concreto (Dimension 264, FX020+, etc.)
+    const modeloTxt = i.centralModelo ? i.centralModelo.replace('Dimension ','Dimension ').replace('Sintony ','') : '';
+    return `<span class="card-tag card-tag-logo"><img src="${LOGOS_MARCA[logoKey]}" alt="Honeywell" style="height:11px;vertical-align:middle;display:inline-block;margin-right:4px">${modeloTxt}</span>`;
+  }
+  return `<span class="card-tag">${i.centralMarca}</span>`;
+}
 function renderInstalaciones() {
   const busq = (document.getElementById('input-buscar').value || '').toLowerCase();
   const inst = Object.values(DB.instalaciones);
@@ -1748,7 +1762,7 @@ function renderInstalaciones() {
             <div class="card-meta">
               <span class="card-codigo">${i.codigo||''}</span>
               ${i.tipo?'<span class="card-tag">'+i.tipo+'</span>':''}
-              ${i.centralMarca?'<span class="card-tag">'+i.centralMarca+'</span>':''}
+              ${tagMarcaCentral(i)}
             </div>
           </div>
           <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></div>
