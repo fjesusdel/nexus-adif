@@ -617,7 +617,7 @@ html, body { height:100%; font-family: 'Inter', system-ui, sans-serif; backgroun
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg>
             </div>
             <div class="ajuste-texto">
-              <div class="ajuste-titulo">Worker CoreLink</div>
+              <div class="ajuste-titulo">Servidor NEXUS</div>
               <div class="ajuste-desc" id="ajuste-url-desc">Sin configurar</div>
             </div>
             <div class="ajuste-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></div>
@@ -1051,14 +1051,14 @@ html, body { height:100%; font-family: 'Inter', system-ui, sans-serif; backgroun
 <div class="modal-overlay" id="modal-conexion">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-titulo">Conexión CoreLink</div>
+    <div class="modal-titulo">Conexión NEXUS</div>
     <div class="form-grupo">
-      <label class="form-label">URL del Worker</label>
-      <input class="form-input" id="con-url" placeholder="https://corelink-adif.fjesusdel.workers.dev">
+      <label class="form-label">URL del servidor NEXUS</label>
+      <input class="form-input" id="con-url" placeholder="https://nexus-adif.TU-USUARIO.workers.dev">
     </div>
     <div class="form-grupo">
-      <label class="form-label">API Key</label>
-      <input class="form-input" id="con-key" placeholder="ilunion2025adif" style="font-family:monospace">
+      <label class="form-label">Clave de acceso</label>
+      <input class="form-input" id="con-key" placeholder="tu-clave-elegida" style="font-family:monospace">
     </div>
     <div class="modal-btns">
       <button class="btn-cancelar" onclick="cerrarModal('modal-conexion')">Cancelar</button>
@@ -1111,7 +1111,7 @@ html, body { height:100%; font-family: 'Inter', system-ui, sans-serif; backgroun
 <input type="file" id="input-importar" accept=".json" style="display:none" onchange="procesarImport(this)">
 
 <script>
-const NEXUS_VERSION = 'v1.5.1';
+const NEXUS_VERSION = 'v1.6.0';
 const MODELOS_CENTRAL = {
   'Galaxy Dimension': ['Dimension 48','Dimension 96','Dimension 264','Dimension 520'],
   'Galaxy Flex': ['FX020+','FX050+','FX100+'],
@@ -1500,7 +1500,7 @@ function iniciar() {
     guardarLocal();
   }
     document.getElementById('ajuste-version').textContent = NEXUS_VERSION + ' · ADIF RC Sur';
-  document.getElementById('ajuste-url-desc').textContent = DB.ajustes.workerUrl || 'Sin configurar';
+  actualizarIndicadorSync(DB.ajustes.workerUrl && DB.ajustes.apiKey ? 'sincronizando' : 'sinconfigurar');
   // Inyectar logo en sidebar para PC
   const sidebarLogo = document.querySelector('.sidebar-logo-wrap');
   const logoImg = document.querySelector('.sidebar-logo-img');
@@ -1515,7 +1515,87 @@ function cargarLocal() {
   if (!DB.usuarios) DB.usuarios = {};
   if (!DB.ajustes) DB.ajustes = {};
 }
-function guardarLocal() { localStorage.setItem('nexus_db', JSON.stringify(DB)); }
+function guardarLocal() {
+  localStorage.setItem('nexus_db', JSON.stringify(DB));
+  if (!sincronizandoAhora) sincronizarSubidaDebounced();
+}
+
+// ── SINCRONIZACIÓN NEXUS (servidor propio, Cloudflare Worker + KV) ──
+let sincronizandoAhora = false;
+let debounceSyncTimer = null;
+
+function actualizarIndicadorSync(estado) {
+  const el = document.getElementById('ajuste-url-desc');
+  if (!el) return;
+  const textos = {
+    sinconfigurar: 'Sin configurar',
+    ok: 'Sincronizado ✓',
+    error: 'Sin conexión',
+    sincronizando: 'Sincronizando…'
+  };
+  el.textContent = textos[estado] || textos.sinconfigurar;
+}
+
+function sincronizarSubidaDebounced() {
+  if (!DB.ajustes.workerUrl || !DB.ajustes.apiKey) return;
+  clearTimeout(debounceSyncTimer);
+  debounceSyncTimer = setTimeout(sincronizarSubida, 1500);
+}
+
+async function sincronizarSubida() {
+  if (!DB.ajustes.workerUrl || !DB.ajustes.apiKey) return;
+  actualizarIndicadorSync('sincronizando');
+  try {
+    const resp = await fetch(DB.ajustes.workerUrl.replace(/\/$/,'') + '/api/data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Nexus-Key': DB.ajustes.apiKey },
+      body: JSON.stringify(DB)
+    });
+    const data = await resp.json();
+    actualizarIndicadorSync(data && data.ok ? 'ok' : 'error');
+  } catch(e) {
+    actualizarIndicadorSync('error');
+  }
+}
+
+async function sincronizarDescarga() {
+  if (!DB.ajustes.workerUrl || !DB.ajustes.apiKey) { actualizarIndicadorSync('sinconfigurar'); return; }
+  actualizarIndicadorSync('sincronizando');
+  try {
+    const resp = await fetch(DB.ajustes.workerUrl.replace(/\/$/,'') + '/api/data', {
+      headers: { 'X-Nexus-Key': DB.ajustes.apiKey }
+    });
+    const data = await resp.json();
+    if (data && data.ok && data.datos) {
+      fusionarRemoto(data.datos);
+      actualizarIndicadorSync('ok');
+    } else {
+      actualizarIndicadorSync('error');
+    }
+  } catch(e) {
+    actualizarIndicadorSync('error');
+  }
+}
+
+function fusionarRemoto(remoto) {
+  sincronizandoAhora = true;
+  ['instalaciones', 'contactos', 'usuarios'].forEach(tipo => {
+    if (!remoto[tipo]) return;
+    if (!DB[tipo]) DB[tipo] = {};
+    Object.keys(remoto[tipo]).forEach(id => {
+      const local = DB[tipo][id];
+      const rem = remoto[tipo][id];
+      if (!local || (rem._upd || 0) > (local._upd || 0)) {
+        DB[tipo][id] = rem;
+      }
+    });
+  });
+  guardarLocal();
+  renderInstalaciones();
+  renderContactos();
+  if (typeof renderUsuariosModal === 'function' && usuarioActual) renderUsuariosModal();
+  sincronizandoAhora = false;
+}
 
 // ── LOGIN ─────────────────────────────────────────────
 function teclaPin(d) {
@@ -1552,6 +1632,7 @@ function verificarPin() {
     renderInstalaciones();
     renderContactos();
     renderUsuariosModal();
+    sincronizarDescarga();
 
     pinActual = '';
     actualizarDots();
@@ -1795,6 +1876,7 @@ function guardarInstalacion() {
     contactoHorario: document.getElementById('inst-contacto-horario').value.trim(),
     contactoNotas: document.getElementById('inst-contacto-notas').value.trim(),
     notas: document.getElementById('inst-notas').value.trim(),
+    _upd: Date.now(),
   };
   guardarLocal();
   fichaActual = DB.instalaciones[id];
@@ -1899,6 +1981,7 @@ function guardarContacto() {
     cargo: document.getElementById('cont-cargo').value.trim(),
     horario: document.getElementById('cont-horario').value.trim(),
     notas: document.getElementById('cont-notas').value.trim(),
+    _upd: Date.now(),
   };
   guardarLocal();
   cerrarModalContacto();
@@ -1925,9 +2008,13 @@ function guardarConexion() {
   DB.ajustes.workerUrl = document.getElementById('con-url').value.trim();
   DB.ajustes.apiKey = document.getElementById('con-key').value.trim();
   guardarLocal();
-  document.getElementById('ajuste-url-desc').textContent = DB.ajustes.workerUrl||'Sin configurar';
   cerrarModal('modal-conexion');
   toast('Conexión guardada ✓');
+  if (DB.ajustes.workerUrl && DB.ajustes.apiKey) {
+    sincronizarDescarga().then(sincronizarSubida);
+  } else {
+    actualizarIndicadorSync('sinconfigurar');
+  }
 }
 
 function abrirModalUsuarios() { document.getElementById('modal-usuarios').classList.add('visible'); }
@@ -1960,7 +2047,7 @@ function guardarUsuario() {
   const pin = document.getElementById('usr-pin').value.trim();
   if (pin.length!==4&&pin.length!==6||!/^\d+$/.test(pin)) { toast('El PIN debe ser de 4 o 6 dígitos numéricos'); return; }
   const id = document.getElementById('usr-id-editar').value || ('usr_'+Date.now().toString(36));
-  DB.usuarios[id] = { id, nombre:document.getElementById('usr-nombre').value.trim(), pin, rol:document.getElementById('usr-rol').value };
+  DB.usuarios[id] = { id, nombre:document.getElementById('usr-nombre').value.trim(), pin, rol:document.getElementById('usr-rol').value, _upd: Date.now() };
   guardarLocal();
   cerrarModal('modal-form-usuario');
   renderUsuariosModal();
