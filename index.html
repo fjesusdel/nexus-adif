@@ -1104,6 +1104,32 @@ const INSTALACIONES_DEFAULT = {
   "inst_41E037S001": {"id": "inst_41E037S001", "nombre": "Majarabique (Caseta)", "codigo": "41E037S001", "provincia": "Sevilla", "tipo": "Caseta de Se\u00f1alizaci\u00f3n", "disponibilidad": "disponible", "dispObs": "", "gps": "", "centralMarca": "", "centralModelo": "", "zonas": "", "abonado": "", "pci": "no", "ipCentral": "", "modulos": [], "ipDesico": "", "claveIng": "", "claveGes": "", "claveUsu": "", "batIntrusion": "", "dvrMarca": "", "dvrSoftware": "", "dvrModelo": "", "dvrCanales": "", "dvrHDD": "", "dvrPuerto": "", "dvrIp": "", "dvrUser": "", "dvrPass": "", "camarasIp": "", "tieneCCAA": "no", "ccaaCabeza": "", "ccaaIp": "", "ccaaUser": "", "ccaaPass": "", "ccaaBat": "", "contactoNombre": "", "contactoTel": "", "contactoHorario": "", "contactoNotas": "", "notas": ""}
 };
 
+// ── DATOS MIGRADOS DE CORELINK ───────────────────────
+  if (INSTALACIONES_DEFAULT["inst_04E002S001"]) INSTALACIONES_DEFAULT["inst_04E002S001"]["notas"] = "Instalaci\u00f3n apagada por subestaciones a causa de peligros anexos en dep\u00f3sitos de combustible - 02-03-2024";
+  if (INSTALACIONES_DEFAULT["inst_41E008S001"]) INSTALACIONES_DEFAULT["inst_41E008S001"]["notas"] = "Avisar a Antonio Jes\u00fas Rold\u00e1n para ver cu\u00e1ndo se puede entrar.";
+  if (INSTALACIONES_DEFAULT["inst_11E013S001"]) INSTALACIONES_DEFAULT["inst_11E013S001"]["notas"] = "Cuarto t\u00e9cnico";
+  if (INSTALACIONES_DEFAULT["inst_53E001S009"]) INSTALACIONES_DEFAULT["inst_53E001S009"]["notas"] = "Subestaci\u00f3n m\u00f3vil sin mantenimiento presencial. Est\u00e1 apagada, sin tensi\u00f3n y siendo desmontada.";
+  if (INSTALACIONES_DEFAULT["inst_53001S007"]) INSTALACIONES_DEFAULT["inst_53001S007"]["notas"] = "Subestaci\u00f3n m\u00f3vil retirada. No se pudo dar de baja por falta de comunicaci\u00f3n de retirada.";
+  if (INSTALACIONES_DEFAULT["inst_29E015S001"]) INSTALACIONES_DEFAULT["inst_29E015S001"]["notas"] = "Llamar a Francisco Vilches (Responsable C\u00f3rdoba y M\u00e1laga). Derivar\u00e1 seguramente a Andr\u00e9s Romero (M\u00e1laga).";
+  if (INSTALACIONES_DEFAULT["inst_11E003S002"]) INSTALACIONES_DEFAULT["inst_11E003S002"]["notas"] = "Pertenece a la DSA";
+  if (INSTALACIONES_DEFAULT["inst_11E015S001"]) INSTALACIONES_DEFAULT["inst_11E015S001"]["notas"] = "Pertenece a la DSA";
+  if (INSTALACIONES_DEFAULT["inst_14E007S002"]) INSTALACIONES_DEFAULT["inst_14E007S002"]["notas"] = "Avisar a Joaqu\u00edn Peinado. T\u00e9cnico Teleco Alta Velocidad Sur.\njpeinado@adif.es\n610 562 875";
+  if (INSTALACIONES_DEFAULT["inst_06E001S002"]) INSTALACIONES_DEFAULT["inst_06E001S002"]["notas"] = "No tiene conexi\u00f3n IP \u2014 no dispone de m\u00f3dulo para tal fin.";
+  if (INSTALACIONES_DEFAULT["inst_14E016S001"]) INSTALACIONES_DEFAULT["inst_14E016S001"]["notas"] = "Videograbador: HIKVISION DS-7316 HQHI-SH";
+  if (INSTALACIONES_DEFAULT["inst_14E016S001"]) INSTALACIONES_DEFAULT["inst_14E016S001"]["dvrMarca"] = "Hikvision";
+  if (INSTALACIONES_DEFAULT["inst_14E016S001"]) INSTALACIONES_DEFAULT["inst_14E016S001"]["dvrModelo"] = "DS-7316 HQHI-SH";
+  if (INSTALACIONES_DEFAULT["inst_14E016S001"]) INSTALACIONES_DEFAULT["inst_14E016S001"]["dvrSoftware"] = "iVMS-4200";
+  if (INSTALACIONES_DEFAULT["inst_41E023S001"]) INSTALACIONES_DEFAULT["inst_41E023S001"]["notas"] = "HDD 2TB \u00b7 7 c\u00e1maras en total.";
+  if (INSTALACIONES_DEFAULT["inst_41E023S001"]) INSTALACIONES_DEFAULT["inst_41E023S001"]["dvrHDD"] = "2TB";
+  if (INSTALACIONES_DEFAULT["inst_14E008S001"]) INSTALACIONES_DEFAULT["inst_14E008S001"]["notas"] = "HDD 2TB";
+  if (INSTALACIONES_DEFAULT["inst_14E008S001"]) INSTALACIONES_DEFAULT["inst_14E008S001"]["dvrHDD"] = "2TB";
+  if (INSTALACIONES_DEFAULT["inst_41E022S001"]) INSTALACIONES_DEFAULT["inst_41E022S001"]["notas"] = "HDD 2TB";
+  if (INSTALACIONES_DEFAULT["inst_41E022S001"]) INSTALACIONES_DEFAULT["inst_41E022S001"]["dvrHDD"] = "2TB";
+  if (INSTALACIONES_DEFAULT["inst_41E017S001"]) INSTALACIONES_DEFAULT["inst_41E017S001"]["notas"] = "HDD 2TB";
+  if (INSTALACIONES_DEFAULT["inst_41E017S001"]) INSTALACIONES_DEFAULT["inst_41E017S001"]["dvrHDD"] = "2TB";
+  if (INSTALACIONES_DEFAULT["inst_06E009S001"]) INSTALACIONES_DEFAULT["inst_06E009S001"]["notas"] = "Zonas: 1-Contacto Magn\u00e9tico Honeywell 401HC \u00b7 2-Detector volum\u00e9trico doble tecnolog\u00eda Bosch DS950 \u00b7 Sirena Interior Honeywell SP20S \u00b7 Teclado Siemens SAK41Es";
+  if (INSTALACIONES_DEFAULT["inst_06E012S001"]) INSTALACIONES_DEFAULT["inst_06E012S001"]["notas"] = "Zonas: 1-IR Interior \u00b7 2-CM Entrada";
+
 // ── IMPORTACIÓN DESDE CORELINK ────────────────────────
 async function importarDesdeCoreLink() {
   const url = DB.ajustes.workerUrl;
