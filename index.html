@@ -736,7 +736,7 @@ html, body { height:100%; font-family: 'Inter', system-ui, sans-serif; backgroun
         <label class="form-label">Provincia</label>
         <select class="form-select" id="inst-provincia">
           <option value="">— Seleccionar —</option>
-          <option>Almería</option><option>Badajoz</option><option>Cádiz</option>
+          <option>Almería</option><option>Badajoz</option><option>Cádiz</option><option>Ciudad Real</option>
           <option>Córdoba</option><option>Granada</option><option>Huelva</option>
           <option>Jaén</option><option>Málaga</option><option>Sevilla</option>
         </select>
@@ -1111,7 +1111,7 @@ html, body { height:100%; font-family: 'Inter', system-ui, sans-serif; backgroun
 <input type="file" id="input-importar" accept=".json" style="display:none" onchange="procesarImport(this)">
 
 <script>
-const NEXUS_VERSION = 'v1.4.3';
+const NEXUS_VERSION = 'v1.5.0';
 const MODELOS_CENTRAL = {
   'Galaxy Dimension': ['Dimension 48','Dimension 96','Dimension 264','Dimension 520'],
   'Galaxy Flex': ['FX020+','FX050+','FX100+'],
@@ -1253,6 +1253,8 @@ const CONTACTOS_DEFAULT = {
 };
 
 const INSTALACIONES_DEFAULT = {
+  "inst_13E008S001": {"id": "inst_13E008S001", "nombre": "Venta de Cárdenas", "codigo": "13E008S001", "provincia": "Ciudad Real", "tipo": "Subestación Eléctrica", "disponibilidad": "disponible", "dispObs": "", "gps": "", "centralMarca": "", "centralModelo": "", "zonas": "", "abonado": "", "centralVersion": "", "pci": "no", "ipCentral": "", "modulos": [], "ipDesico": "", "rtcTel": "", "gprsSim": "", "claveIng": "", "claveGes": "", "claveUsu": "", "batIntrusion": "", "dvrMarca": "", "dvrSoftware": "", "dvrModelo": "", "dvrCanales": "", "dvrHDD": "", "dvrPuerto": "", "dvrIp": "", "dvrUser": "", "dvrPass": "", "camarasIp": "", "tieneCCAA": "no", "ccaaOperativo": "si", "ccaaCabeza": "", "ccaaIp": "", "ccaaUser": "", "ccaaPass": "", "ccaaBat": "", "contactoNombre": "", "contactoTel": "", "contactoHorario": "", "contactoNotas": "", "notas": ""},
+  "inst_13E005S001": {"id": "inst_13E005S001", "nombre": "Peñalajo", "codigo": "13E005S001", "provincia": "Ciudad Real", "tipo": "Subestación Eléctrica", "disponibilidad": "disponible", "dispObs": "", "gps": "", "centralMarca": "", "centralModelo": "", "zonas": "", "abonado": "", "centralVersion": "", "pci": "no", "ipCentral": "", "modulos": [], "ipDesico": "", "rtcTel": "", "gprsSim": "", "claveIng": "", "claveGes": "", "claveUsu": "", "batIntrusion": "", "dvrMarca": "", "dvrSoftware": "", "dvrModelo": "", "dvrCanales": "", "dvrHDD": "", "dvrPuerto": "", "dvrIp": "", "dvrUser": "", "dvrPass": "", "camarasIp": "", "tieneCCAA": "no", "ccaaOperativo": "si", "ccaaCabeza": "", "ccaaIp": "", "ccaaUser": "", "ccaaPass": "", "ccaaBat": "", "contactoNombre": "", "contactoTel": "", "contactoHorario": "", "contactoNotas": "", "notas": ""},
   "inst_04E002S001": {"id": "inst_04E002S001", "nombre": "Huercal", "codigo": "04E002S001", "provincia": "Almer\u00eda", "tipo": "Subestaci\u00f3n El\u00e9ctrica", "disponibilidad": "disponible", "dispObs": "", "gps": "", "centralMarca": "Sintony", "centralModelo": "Sintony 400", "zonas": "", "abonado": "3549", "centralVersion": "", "pci": "no", "ipCentral": "", "modulos": [], "ipDesico": "", "rtcTel": "", "gprsSim": "", "claveIng": "", "claveGes": "", "claveUsu": "", "batIntrusion": "", "dvrMarca": "", "dvrSoftware": "", "dvrModelo": "", "dvrCanales": "", "dvrHDD": "", "dvrPuerto": "", "dvrIp": "", "dvrUser": "", "dvrPass": "", "camarasIp": "", "tieneCCAA": "no", "ccaaOperativo": "si", "ccaaCabeza": "", "ccaaIp": "", "ccaaUser": "", "ccaaPass": "", "ccaaBat": "", "contactoNombre": "", "contactoTel": "", "contactoHorario": "", "contactoNotas": "", "notas": ""},
   "inst_04E003S001": {"id": "inst_04E003S001", "nombre": "Santa Fe", "codigo": "04E003S001", "provincia": "Almer\u00eda", "tipo": "Subestaci\u00f3n El\u00e9ctrica", "disponibilidad": "disponible", "dispObs": "", "gps": "", "centralMarca": "Sintony", "centralModelo": "Sintony 400", "zonas": "", "abonado": "3550", "centralVersion": "", "pci": "no", "ipCentral": "", "modulos": [], "ipDesico": "", "rtcTel": "", "gprsSim": "", "claveIng": "", "claveGes": "", "claveUsu": "", "batIntrusion": "", "dvrMarca": "", "dvrSoftware": "", "dvrModelo": "", "dvrCanales": "", "dvrHDD": "", "dvrPuerto": "", "dvrIp": "", "dvrUser": "", "dvrPass": "", "camarasIp": "", "tieneCCAA": "no", "ccaaOperativo": "si", "ccaaCabeza": "", "ccaaIp": "", "ccaaUser": "", "ccaaPass": "", "ccaaBat": "", "contactoNombre": "", "contactoTel": "", "contactoHorario": "", "contactoNotas": "", "notas": ""},
   "inst_04E004S001": {"id": "inst_04E004S001", "nombre": "Fuente Santa", "codigo": "04E004S001", "provincia": "Almer\u00eda", "tipo": "Subestaci\u00f3n El\u00e9ctrica", "disponibilidad": "disponible", "dispObs": "", "gps": "", "centralMarca": "Sintony", "centralModelo": "Sintony 400", "zonas": "", "abonado": "3551", "centralVersion": "", "pci": "no", "ipCentral": "", "modulos": [], "ipDesico": "", "rtcTel": "", "gprsSim": "", "claveIng": "", "claveGes": "", "claveUsu": "", "batIntrusion": "", "dvrMarca": "", "dvrSoftware": "", "dvrModelo": "", "dvrCanales": "", "dvrHDD": "", "dvrPuerto": "", "dvrIp": "", "dvrUser": "", "dvrPass": "", "camarasIp": "", "tieneCCAA": "no", "ccaaOperativo": "si", "ccaaCabeza": "", "ccaaIp": "", "ccaaUser": "", "ccaaPass": "", "ccaaBat": "", "contactoNombre": "", "contactoTel": "", "contactoHorario": "", "contactoNotas": "", "notas": ""},
@@ -1471,6 +1473,27 @@ function iniciar() {
     DB.instalaciones = JSON.parse(JSON.stringify(INSTALACIONES_DEFAULT));
     guardarLocal();
   }
+  // Migración: corregir nombres antiguos erróneos guardados en localStorage (v1.4.2) sin perder datos
+  const CORRECCIONES_NOMBRE = {
+    '04E003S001': 'Santa Fe',
+    '04E004S001': 'Fuente Santa',
+    '04E005S001': 'Nacimiento',
+  };
+  let migracionAplicada = false;
+  Object.values(DB.instalaciones).forEach(inst => {
+    if (CORRECCIONES_NOMBRE[inst.codigo] && inst.nombre !== CORRECCIONES_NOMBRE[inst.codigo]) {
+      inst.nombre = CORRECCIONES_NOMBRE[inst.codigo];
+      migracionAplicada = true;
+    }
+  });
+  // Migración: añadir Venta de Cárdenas y Peñalajo (Ciudad Real) si no existen aún
+  ['inst_13E008S001','inst_13E005S001'].forEach(id => {
+    if (!DB.instalaciones[id] && INSTALACIONES_DEFAULT[id]) {
+      DB.instalaciones[id] = JSON.parse(JSON.stringify(INSTALACIONES_DEFAULT[id]));
+      migracionAplicada = true;
+    }
+  });
+  if (migracionAplicada) guardarLocal();
   // Cargar contactos por defecto si no hay ninguno
   if (!DB.contactos || Object.keys(DB.contactos).length === 0) {
     DB.contactos = JSON.parse(JSON.stringify(CONTACTOS_DEFAULT));
