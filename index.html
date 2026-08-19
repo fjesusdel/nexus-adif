@@ -610,7 +610,7 @@ html, body { height:100%; font-family: 'Inter', system-ui, sans-serif; backgroun
     <!-- PANEL AJUSTES -->
     <div class="tab-panel" id="panel-ajustes">
       <div class="ajustes-lista">
-        <div class="ajuste-grupo">
+        <div class="ajuste-grupo" id="grupo-conexion-nexus">
           <div class="ajuste-grupo-titulo">Conexión</div>
           <div class="ajuste-item" onclick="abrirModalConexion()">
             <div class="ajuste-icono verde">
@@ -1112,6 +1112,10 @@ html, body { height:100%; font-family: 'Inter', system-ui, sans-serif; backgroun
 
 <script>
 const NEXUS_VERSION = 'v1.6.0';
+// Servidor NEXUS por defecto (Fran/admin puede cambiarlo en Ajustes → Servidor NEXUS).
+// Así Jesús y cualquier otro usuario se sincronizan sin tener que configurar nada.
+const NEXUS_SERVER_DEFAULT_URL = 'https://nexus-adif.fjesusdel.workers.dev/';
+const NEXUS_SERVER_DEFAULT_KEY = 'adifRCsur2026NexusSeguro';
 const MODELOS_CENTRAL = {
   'Galaxy Dimension': ['Dimension 48','Dimension 96','Dimension 264','Dimension 520'],
   'Galaxy Flex': ['FX020+','FX050+','FX100+'],
@@ -1494,6 +1498,13 @@ function iniciar() {
     }
   });
   if (migracionAplicada) guardarLocal();
+  // Migración: aplicar servidor NEXUS por defecto si el dispositivo no tiene ninguno configurado
+  // (así Jesús u otros usuarios no tienen que configurar nada a mano)
+  if (!DB.ajustes.workerUrl || !DB.ajustes.apiKey) {
+    DB.ajustes.workerUrl = NEXUS_SERVER_DEFAULT_URL;
+    DB.ajustes.apiKey = NEXUS_SERVER_DEFAULT_KEY;
+    guardarLocal();
+  }
   // Cargar contactos por defecto si no hay ninguno
   if (!DB.contactos || Object.keys(DB.contactos).length === 0) {
     DB.contactos = JSON.parse(JSON.stringify(CONTACTOS_DEFAULT));
@@ -1633,6 +1644,8 @@ function verificarPin() {
     renderContactos();
     renderUsuariosModal();
     sincronizarDescarga();
+    const grupoConexion = document.getElementById('grupo-conexion-nexus');
+    if (grupoConexion) grupoConexion.style.display = (usuario.rol === 'admin') ? '' : 'none';
 
     pinActual = '';
     actualizarDots();
