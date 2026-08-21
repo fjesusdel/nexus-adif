@@ -1139,7 +1139,7 @@ const NEXUS_SERVER_DEFAULT_KEY = 'adifRCsur2026NexusSeguro';
 const MODELOS_CENTRAL = {
   'Galaxy Dimension': ['Dimension 48','Dimension 96','Dimension 264','Dimension 520'],
   'Galaxy Flex': ['FX020+','FX050+','FX100+'],
-  'Sintony': ['Sintony 400','Sintony 60'],
+  'Sintony': ['Sintony 400'],
   'Otra': []
 };
 const SOFTWARE_DVR = { 'Hikvision':'iVMS-4200','Geutebrück':'GscView','CCTVCenter':'RASplus','AXIS':'AXIS Companion / Camera Station' };
@@ -1956,12 +1956,18 @@ function toggleBtnMaps() {
   }
 }
 function cerrarModalInstalacion() { volverDeFicha(); }
-function actualizarModelosCentral() {
+function actualizarModelosCentral(preservarValor) {
   const marca = document.getElementById('inst-central-marca').value;
   const modelos = MODELOS_CENTRAL[marca] || [];
   const sel = document.getElementById('inst-central-modelo');
+  const valorPrevio = preservarValor ? sel.value : '';
   sel.innerHTML = '<option value="">— Seleccionar modelo —</option>' + modelos.map(m=>`<option value="${m}">${m}</option>`).join('');
   if (marca==='Otra') sel.innerHTML = '<option value="">Otra</option><option value="manual">Especificar manualmente</option>';
+  if (valorPrevio && modelos.includes(valorPrevio)) {
+    sel.value = valorPrevio;
+  } else if (modelos.length === 1) {
+    sel.value = modelos[0];
+  }
   const logoWrap = document.getElementById('logo-marca-central');
   const logoImg = document.getElementById('logo-marca-central-img');
   const logoKey = LOGO_POR_MARCA_CENTRAL[marca];
